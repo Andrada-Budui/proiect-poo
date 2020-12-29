@@ -140,6 +140,12 @@
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Column.h" />
+    <ClInclude Include="Commands.h" />
+    <ClInclude Include="Table.h" />
+    <ClInclude Include="Verify.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -45,15 +45,29 @@ public:
 			c.delete_f(comanda);
 		}
 
+		found = comanda.find("SELECT");
+		found1 = comanda.find("ALL");
+		size_t found2 = comanda.find("WHERE");
+		if (found != string::npos && found1 != string::npos && found2 != string::npos)
+			c.select_all_where(comanda);
+		else
+		{
+			if (found != string::npos && found1 != string::npos)
+				c.select_all(comanda);
+			else {
+				if (found != string::npos && found2 != string::npos)
+					c.select_where(comanda);
+				else
+					if (found != string::npos)
+						c.select(comanda);
+			}
+		}
+		found = comanda.find("UPDATE");
+		found1 = comanda.find("SET");
+		found2 = comanda.find("WHERE");
+		if (found != string::npos && found1 != string::npos && found2 != string::npos)
+			c.update(comanda);
 
-
-		//found = s.find("SELECT");
-		//if (found != string::npos)
-		//	c.create_table();
-
-		//found = s.find("UPDATE");
-		//if (found != string::npos)
-		//	c.create_table();*/
 
 	}
 };

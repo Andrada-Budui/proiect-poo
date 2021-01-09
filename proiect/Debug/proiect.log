@@ -1,2 +1,4 @@
 ﻿  Source.cpp
+C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(723,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(892,21): warning C4018: '<': signed/unsigned mismatch
   proiect.vcxproj -> C:\Users\Andrada\Desktop\proiect-poo\proiect\Debug\proiect.exe

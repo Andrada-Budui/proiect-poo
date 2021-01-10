@@ -1,4 +1,1 @@
-varsta			nume			adresa			
-21			Popescu			Bucuresti			
-29			Niculescu			Cluj			
-26			Mugurel			Bucuresti			
+varsta	integer	2	0	nume	text	30	no	adresa	text	40	no	

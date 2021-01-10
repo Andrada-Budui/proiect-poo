@@ -1,0 +1,7 @@
+CREATE TABLE persoana ((varsta, integer, 2, 0),(nume, text, 30, no ),(adresa, text, 40, no)
+INSERT INTO persoana VALUES (21,Popescu,Bucuresti)
+INSERT INTO persoana VALUES (29,Niculescu,Cluj)
+INSERT INTO persoana VALUES (26,Mugurel,Bucuresti)
+SELECT ALL FROM persoana WHERE nume=Mugurel
+SELECT nume, adresa FROM persoana
+SELECT varsta, adresa FROM persoana WHERE adresa=Cluj

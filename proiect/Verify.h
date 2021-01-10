@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "Commands.h"
 using namespace std;
@@ -8,6 +9,17 @@ class Verify {
 
 public:
 	Commands c;
+	void file(string file_name)
+	{
+		ifstream f(file_name);
+		if (f.is_open())
+		{
+			string comanda;
+			while (getline(f, comanda))
+				check(comanda);
+		}
+	}
+
 	void check(string comanda)
 	{
 

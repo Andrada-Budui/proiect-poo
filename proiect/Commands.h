@@ -18,7 +18,7 @@ public:
 		Table tb;
 		vector<string> v;
 		//extragere nume tabela
-		/*cout << endl;*/
+
 		char* sc = new char[comanda.length() + 1];
 		strcpy_s(sc, comanda.length() + 1, comanda.c_str());
 
@@ -26,18 +26,18 @@ public:
 		char* next_poz = NULL;
 		const char* chr = "(";
 		poz = strtok_s(sc, chr, &next_poz);
-		/*cout << poz << endl;*/
+
 
 		char* poz1 = NULL;
 		next_poz = NULL;
 		chr = " ";
-		string nume_tabela;
+		string table_name;
 		int nr_cuv = 0;
 		poz1 = strtok_s(poz, chr, &next_poz);
 		while (poz1 != NULL)
 		{
 			/*cout << poz1<<endl;*/
-			nume_tabela = poz1;
+			table_name = poz1;
 			++nr_cuv;
 			poz1 = strtok_s(NULL, chr, &next_poz);
 		}
@@ -45,32 +45,33 @@ public:
 		if (nr_cuv > 3)
 			cout << "wrong table name" << endl;
 		else {
-			/*cout << nume_tabela;*/
-			tb.table_name = nume_tabela;
+
+			tb.table_name = table_name;
 			bool ok = false;//presupunem ca nu exista o tabela cu acest nume
 			for (auto it = tl.begin(); it != tl.end() && ok == false; ++it)
-				if ((*it).table_name == nume_tabela)
+				if ((*it).table_name == table_name)
 				{
 					ok = true;
 					cout << "Table already exists";
 				}
 
 			if (ok == false)
-			{//extragere date
-				/*cout << endl;*/
+			{   //extragere date
+				string f_name = table_name + "_structure";
+				file_name.push_back(f_name);
+				ofstream f(f_name, ios::binary);
+				ofstream g(table_name);
 				size_t found = comanda.find("(");
 				string atribute = comanda.substr(found);
 				char* s = new char[atribute.length() + 1];
 				strcpy_s(s, atribute.length() + 1, atribute.c_str());
-				/*cout << s;*/
-				/*cout << endl;*/
 				chr = "( ,)";
 				poz = NULL;
 				next_poz = NULL;
 				poz = strtok_s(s, chr, &next_poz);
 				while (poz != NULL)
 				{
-					/*cout << poz<<endl;*/
+
 					v.push_back(poz);
 					poz = strtok_s(NULL, chr, &next_poz);
 				}
@@ -84,16 +85,53 @@ public:
 					c.type = *i;
 					++i;
 					c.dimension = *i;
+					int dimension = stoi(c.dimension);
 					++i;
 					c.defaultValue = *i;
 					++i;
-					/*cout << c;*/
+
+					int length = c.name.length();
+					f.write((char*)&length, sizeof(length));
+					f.write(c.name.c_str(), length + 1);
+					g << c.name << "\t";
+					length = c.type.length();
+					f.write((char*)&length, sizeof(length));
+					f.write(c.type.c_str(), length + 1);
+					g << c.type << "\t";
+					f.write((char*)&dimension, sizeof(dimension));
+					g << dimension << "\t";
+
+
+					if (c.type == "integer")
+					{
+						int default_value = stoi(c.defaultValue);
+						f.write((char*)&default_value, sizeof(default_value));
+						g << default_value << "\t";
+					}
+					else
+					{
+						if (c.type == "float")
+						{
+							float default_fvalue = stof(c.defaultValue);
+							f.write((char*)&default_fvalue, sizeof(default_fvalue));
+							g << default_fvalue << "\t";
+						}
+						else
+						{
+							length = c.defaultValue.length();
+							f.write((char*)&length, sizeof(length));
+							f.write(c.defaultValue.c_str(), length + 1);
+							g << c.defaultValue << "\t";
+						}
+
+
+					}
 					vc.push_back(c);
+
 				}
 				tb.column_vector = vc;
-				/*	for (auto& i : tb.column_vector)
-						cout << i << endl;*/
 				tl.push_back(tb);
+				f.close();
 			}
 
 		}
@@ -113,7 +151,7 @@ public:
 		int nr_cuv = 0;
 		while (poz != NULL)
 		{
-			/*cout << poz<<endl;*/
+
 			nr_cuv++;
 			table_name = poz;
 			poz = strtok_s(NULL, sep, &next_poz);
@@ -128,13 +166,17 @@ public:
 				if ((*it).table_name == table_name)
 				{
 					ok = true;
+					string table_data = table_name + "_data";
+					string table_structure = table_name + "_structure";
 					tl.erase(it);
-					cout << "Table dropped";
+					remove(table_data.c_str());
+					remove(table_structure.c_str());
+					cout << "Table dropped" << endl;
 					break;
 
 				}
 			if (ok == false)
-				cout << "Table doesn't exist";
+				cout << "Table doesn't exist" << endl;
 
 		}
 	}
@@ -167,33 +209,35 @@ public:
 			cout << "Wrong table name";
 		else
 		{
-			/*cout << table_name;*/
+
 			bool ok = false;//presupunem ca nu exista o tabela cu acest nume
 			for (auto it = tl.begin(); it != tl.end() && ok == false; ++it)
 			{
 				if ((*it).table_name == table_name)
 				{
 					ok = true;
+					string table_data = table_name + "_data";
+					ofstream f(table_data, ios::binary | ios::app);
 					size_t found = comanda.find("(");
 					string atribute = comanda.substr(found);
 					char* s = new char[atribute.length() + 1];
 					strcpy_s(s, atribute.length() + 1, atribute.c_str());
-					/*cout << s;*/
-					/*cout << endl;*/
 					sep = "(,)";
 					poz = NULL;
 					next_poz = NULL;
 					poz = strtok_s(s, sep, &next_poz);
+					int length;
 					while (poz != NULL)
 					{
-						/*cout << poz<<endl;*/
+						length = strlen(poz);
+						f.write((char*)&length, sizeof(length));
+						f.write(poz, length + 1);
 						linie.push_back(poz);
 						poz = strtok_s(NULL, sep, &next_poz);
 					}
-					/*for (auto& i : linie)
-						cout << i << "\t\t ";*/
-					(*it).inregistrari.push_back(linie);
 
+					(*it).inregistrari.push_back(linie);
+					f.close();
 				}
 			}
 			if (ok == false)
@@ -286,7 +330,7 @@ public:
 				}
 			}
 			if (ok == false)
-				cout << "Table doesn't exist";
+				cout << "Table doesn't exist" << endl;
 		}
 	}
 
@@ -312,8 +356,7 @@ public:
 			cout << "Wrong table name";
 		else
 		{
-			cout << table_name;
-
+			string table_data = table_name + "_data";
 			bool ok = false;//presupunem ca nu exista o tabela cu acest nume
 			for (auto it = tl.begin(); it != tl.end() && ok == false; ++it)
 			{
@@ -321,6 +364,8 @@ public:
 				{
 					ok = true;
 					(*it).inregistrari.clear();
+					remove(table_data.c_str());
+					ofstream f(table_data, ios::binary);
 					cout << "rows deleted";
 				}
 			}
@@ -356,7 +401,6 @@ public:
 			cout << "Wrong table name";
 		else
 		{
-			/*cout << table_name;*/
 			//extragem conditie stergere
 			delete[] dp;
 			dp = new char[comanda.length() + 1];
@@ -368,11 +412,10 @@ public:
 			poz = strtok_s(dp, sep, &next_poz);
 			while (poz != NULL)
 			{
-				/*cout << poz << endl;*/
 				conditie = poz;
 				poz = strtok_s(NULL, sep, &next_poz);
 			}
-			cout << conditie << endl;
+
 			poz = NULL;
 			next_poz = NULL;
 			sep = "=";
@@ -389,6 +432,7 @@ public:
 			{
 				if ((*it).table_name == table_name)
 				{
+					string f_name = table_name + "_data";
 					ok = true;
 					int nr = 0, poz;
 					for (auto& i : (*it).column_vector)
@@ -397,16 +441,33 @@ public:
 						if (i.name == coloana)
 							poz = nr;
 					}
+					int length;
 					list<vector<string>> vl;
-
+					remove(f_name.c_str());
+					ofstream f(f_name, ios::binary | ios::app);
 					for (auto& i : (*it).inregistrari)
 					{
 						if (i[poz - 1] != valoare)
+						{
 							vl.push_back(i);
+
+						}
 					}
 
 					(*it).inregistrari.clear();
 					(*it).inregistrari = vl;
+					for (auto& i : (*it).inregistrari)
+					{
+						for (auto& j : i)
+						{
+							cout << j << " ";
+							length = j.length();
+							f.write((char*)&length, sizeof(length));
+							f.write(j.c_str(), length + 1);
+						}
+						cout << endl;
+					}
+					f.close();
 
 				}
 			}
@@ -880,12 +941,10 @@ public:
 						}
 					}
 					f << endl;
-					/*bool ok1 = false;*/
 					for (auto& i : (*it).inregistrari)
 					{
 						if (i[poz_cond - 1] == valoare)
 						{
-							/*ok1 = true;*/
 							int nr = 0, poz_col = 0;
 							for (auto& j : i)
 							{
@@ -926,9 +985,6 @@ public:
 							cout << endl;
 						}
 					}
-
-					/*if (ok1 == false)
-						cout << "No Data Found";*/
 
 				}
 			}
@@ -979,13 +1035,13 @@ public:
 		setCol = poz;
 		poz = strtok_s(NULL, sep, &next_poz);
 		setVal = poz;
-		cout << setCol << " " << setVal << endl;
+		/*cout << setCol << " " << setVal << endl;*/
 		poz = NULL;
 		poz = strtok_s(where_ch, sep, &next_poz);
 		whereCol = poz;
 		poz = strtok_s(NULL, sep, &next_poz);
 		whereVal = poz;
-		cout << whereCol << " " << whereVal << endl;
+		/*cout << whereCol << " " << whereVal << endl;*/
 		bool ok = false;//presupunem ca nu exista tabela
 		for (auto it = tl.begin(); it != tl.end(); ++it)
 		{
@@ -1007,7 +1063,21 @@ public:
 					if (i[poz_where - 1] == whereVal)
 						i[poz_set - 1] = setVal;
 				}
+				string f_name = table_name + "_data";
+				int length;
+				remove(f_name.c_str());
+				ofstream f(f_name, ios::binary | ios::app);
+				for (auto& i : (*it).inregistrari)
+				{
+					for (auto& j : i)
+					{
+						length = j.length();
+						f.write((char*)&length, sizeof(length));
+						f.write(j.c_str(), length + 1);
+					}
+				}
 
+				f.close();
 			}
 		}
 		if (!ok)

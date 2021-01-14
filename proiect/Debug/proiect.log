@@ -1,4 +1,8 @@
 ﻿  Source.cpp
-C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(784,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(951,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(12,27): warning C4129: '/': unrecognized character escape sequence
+C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(15,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(25,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(38,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(950,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(1117,21): warning C4018: '<': signed/unsigned mismatch
   proiect.vcxproj -> C:\Users\Andrada\Desktop\proiect-poo\proiect\Debug\proiect.exe

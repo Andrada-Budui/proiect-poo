@@ -23,9 +23,10 @@ public:
 	void check(string comanda)
 	{
 
-		size_t found = comanda.find("CREATE TABLE");
+		size_t found = comanda.find("CREATE TABLE ");
 		if (found != string::npos)
 			c.create_table(comanda);
+		/*else cout << "wrong command form";*/
 
 		found = comanda.find("DROP TABLE");
 		if (found != string::npos)
@@ -33,8 +34,8 @@ public:
 			c.drop_table(comanda);
 		}
 
-		found = comanda.find("INSERT INTO");
-		size_t found1 = comanda.find("VALUES");
+		found = comanda.find("INSERT INTO ");
+		size_t found1 = comanda.find(" VALUES ");
 		if (found != string::npos && found1 != string::npos)
 		{
 			c.insert(comanda);
@@ -46,8 +47,8 @@ public:
 			c.display_table(comanda);
 		}
 
-		found = comanda.find("DELETE");
-		found1 = comanda.find("WHERE");
+		found = comanda.find("DELETE ");
+		found1 = comanda.find(" WHERE ");
 		if (found != string::npos && found1 != string::npos)
 		{
 			c.delete_w(comanda);
@@ -80,6 +81,9 @@ public:
 		if (found != string::npos && found1 != string::npos && found2 != string::npos)
 			c.update(comanda);
 
-
+		found = comanda.find("IMPORT ");
+		found1 = comanda.find(".csv");
+		if (found != string::npos && found1 != string::npos)
+			c.insert_csv(comanda);
 	}
 };

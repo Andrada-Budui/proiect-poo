@@ -7,6 +7,52 @@
 #include <vector>
 #include "Column.h"
 #include "Table.h"
+bool isValid(string strg)
+{
+	const char* characters = "~`!@#$%^&*()-+=?.,<>\/[]{}'";
+	char* tb_n = new char[strg.length() + 1];
+	strcpy_s(tb_n, strg.length() + 1, strg.c_str());
+	for (int i = 0; i < strlen(characters); i++)
+		if (strchr(tb_n, characters[i]) != NULL)
+			return false;
+	return true;
+}
+bool isInteger(string nmb)
+{
+	char characters[] = "0123456789";
+	char* number = new char[nmb.length() + 1];
+	strcpy_s(number, nmb.length() + 1, nmb.c_str());
+	for (int i = 0; i < strlen(number); i++)
+		if (strchr(characters, number[i]) == NULL)
+			return 0;
+	if (number[0] == '0' && strlen(number) >= 2)
+		return false;
+	return true;
+}
+
+bool isFloat(string nmb)
+{
+	const char* characters = ".0123456789";
+	char* number = new char[nmb.length() + 1];
+	strcpy_s(number, nmb.length() + 1, nmb.c_str());
+	for (int i = 0; i < strlen(number); i++)
+		if (strchr(characters, number[i]) == NULL)
+			return false;
+	if (number[0] = '0' && number[1] != '.')
+		return false;
+	return true;
+}
+
+bool validType(string type)
+{
+	if (type == "integer")
+		return true;
+	if (type == "float")
+		return true;
+	if (type == "text")
+		return true;
+	return false;
+}
 
 class Commands
 {
@@ -17,123 +63,145 @@ public:
 	{
 		Table tb;
 		vector<string> v;
-		//extragere nume tabela
-
-		char* sc = new char[comanda.length() + 1];
-		strcpy_s(sc, comanda.length() + 1, comanda.c_str());
-
-		char* poz = NULL;
-		char* next_poz = NULL;
-		const char* chr = "(";
-		poz = strtok_s(sc, chr, &next_poz);
-
-
-		char* poz1 = NULL;
-		next_poz = NULL;
-		chr = " ";
 		string table_name;
-		int nr_cuv = 0;
-		poz1 = strtok_s(poz, chr, &next_poz);
-		while (poz1 != NULL)
+		string c1;
+		string c2;
+		char* cf1;
+		char* cf2;
+		size_t found = comanda.find("(");
+		if (found != string::npos)
 		{
-			/*cout << poz1<<endl;*/
-			table_name = poz1;
-			++nr_cuv;
-			poz1 = strtok_s(NULL, chr, &next_poz);
-		}
+			c1 = comanda.substr(0, found);
+			c2 = comanda.substr(found + 1, comanda.length());
+			cf1 = new char[c1.length() + 1];
+			strcpy_s(cf1, c1.length() + 1, c1.c_str());
+			cf2 = new char[c2.length() + 1];
+			strcpy_s(cf2, c2.length() + 1, c2.c_str());
 
-		if (nr_cuv > 3)
-			cout << "wrong table name" << endl;
-		else {
-
-			tb.table_name = table_name;
-			bool ok = false;//presupunem ca nu exista o tabela cu acest nume
-			for (auto it = tl.begin(); it != tl.end() && ok == false; ++it)
-				if ((*it).table_name == table_name)
-				{
-					ok = true;
-					cout << "Table already exists";
-				}
-
-			if (ok == false)
-			{   //extragere date
-				string f_name = table_name + "_structure";
-				file_name.push_back(f_name);
-				ofstream f(f_name, ios::binary);
-				ofstream g(table_name);
-				size_t found = comanda.find("(");
-				string atribute = comanda.substr(found);
-				char* s = new char[atribute.length() + 1];
-				strcpy_s(s, atribute.length() + 1, atribute.c_str());
-				chr = "( ,)";
-				poz = NULL;
-				next_poz = NULL;
-				poz = strtok_s(s, chr, &next_poz);
-				while (poz != NULL)
-				{
-
-					v.push_back(poz);
-					poz = strtok_s(NULL, chr, &next_poz);
-				}
-				vector<Column> vc;
-				vector<string>::iterator i = v.begin();
-				while (i != v.end())
-				{
-					Column c;
-					c.name = *i;
-					++i;
-					c.type = *i;
-					++i;
-					c.dimension = *i;
-					int dimension = stoi(c.dimension);
-					++i;
-					c.defaultValue = *i;
-					++i;
-
-					int length = c.name.length();
-					f.write((char*)&length, sizeof(length));
-					f.write(c.name.c_str(), length + 1);
-					g << c.name << "\t";
-					length = c.type.length();
-					f.write((char*)&length, sizeof(length));
-					f.write(c.type.c_str(), length + 1);
-					g << c.type << "\t";
-					f.write((char*)&dimension, sizeof(dimension));
-					g << dimension << "\t";
-
-
-					if (c.type == "integer")
-					{
-						int default_value = stoi(c.defaultValue);
-						f.write((char*)&default_value, sizeof(default_value));
-						g << default_value << "\t";
-					}
-					else
-					{
-						if (c.type == "float")
-						{
-							float default_fvalue = stof(c.defaultValue);
-							f.write((char*)&default_fvalue, sizeof(default_fvalue));
-							g << default_fvalue << "\t";
-						}
-						else
-						{
-							length = c.defaultValue.length();
-							f.write((char*)&length, sizeof(length));
-							f.write(c.defaultValue.c_str(), length + 1);
-							g << c.defaultValue << "\t";
-						}
-
-
-					}
-					vc.push_back(c);
-
-				}
-				tb.column_vector = vc;
-				tl.push_back(tb);
-				f.close();
+			char* poz = NULL;
+			char* next_poz = NULL;
+			poz = strtok_s(cf1, " ", &next_poz);
+			int nr = 0;
+			while (poz != NULL && nr <= 3)
+			{
+				nr++;
+				table_name = poz;
+				poz = strtok_s(NULL, " ", &next_poz);
 			}
 
+			if (nr > 3)
+				cout << "wrong table name" << endl;
+			else
+			{
+				if (!isValid(table_name))
+					cout << "wrong table name" << endl;
+				else
+				{
+					tb.table_name = table_name;
+					bool ok = false;//presupunem ca nu exista o tabela cu acest nume
+					for (auto it = tl.begin(); it != tl.end() && ok == false; ++it)
+						if ((*it).table_name == table_name)
+						{
+							ok = true;
+							cout << "Table already exists";
+						}
+
+					if (ok == false)
+					{   //extragere date
+						ofstream g(table_name);
+						file_name.push_back(table_name);
+						const char* chr = "( ,)";
+						poz = NULL;
+						next_poz = NULL;
+						poz = strtok_s(cf2, chr, &next_poz);
+						while (poz != NULL)
+						{
+
+							v.push_back(poz);
+							poz = strtok_s(NULL, chr, &next_poz);
+						}
+						vector<Column> vc;
+						vector<string>::iterator i = v.begin();
+						bool valid_data = true;
+						while (i != v.end() && valid_data)
+						{
+							Column c;
+							c.name = *i;
+							if (!isValid(c.name))
+								valid_data = false;
+							++i;
+
+							c.type = *i;
+							if (!validType(c.type))
+								valid_data = false;
+							++i;
+
+							c.dimension = *i;
+							int dimension;
+							if (!isInteger(c.dimension))
+								valid_data = false;
+							else
+							{
+								dimension = stoi(c.dimension);
+							}
+
+							++i;
+							c.defaultValue = *i;
+							++i;
+
+							if (c.type == "integer")
+							{
+								if (isInteger(c.defaultValue) && valid_data)
+								{
+									int default_value = stoi(c.defaultValue);
+									g << c.name << "\t\t";
+									g << c.type << "\t\t";
+									g << dimension << "\t\t";
+									g << default_value << "\t\t";
+								}
+								else
+									valid_data = false;
+							}
+
+							if (c.type == "float")
+							{
+								if (isFloat(c.defaultValue) && valid_data)
+								{
+									float default_fvalue = stof(c.defaultValue);
+									g << c.name << "\t\t";
+									g << c.type << "\t\t";
+									g << dimension << "\t\t";
+									g << default_fvalue << "\t\t";
+								}
+								else valid_data = false;
+							}
+							if (c.type == "text")
+							{
+								if (valid_data)
+								{
+									g << c.name << "\t\t";
+									g << c.type << "\t\t";
+									g << dimension << "\t\t";
+									g << c.defaultValue << "\t\t";
+								}
+							}
+							if (!valid_data)
+								cout << "No valid data";
+							else
+							{
+								vc.push_back(c);
+								g << endl;
+							}
+						}
+						tb.column_vector = vc;
+						tl.push_back(tb);
+						g.close();
+
+					}
+
+				}
+
+			}
 		}
 
 	}
@@ -184,29 +252,115 @@ public:
 	void insert(string comanda)
 	{
 		//Table tb;
-		vector<string> linie;
-		char* dp = new char[comanda.length() + 1];
-		strcpy_s(dp, comanda.length() + 1, comanda.c_str());
+
+		vector<string> v;
+		string table_name;
+		string c1;
+		string c2;
+		char* cf1;
+		char* cf2;
+		size_t found = comanda.find("VALUES");
+		if (found != string::npos)
+		{
+			c1 = comanda.substr(0, found);
+			c2 = comanda.substr(found, comanda.length());
+			cf1 = new char[c1.length() + 1];
+			strcpy_s(cf1, c1.length() + 1, c1.c_str());
+			cf2 = new char[c2.length() + 1];
+			strcpy_s(cf2, c2.length() + 1, c2.c_str());
+			char* poz = NULL;
+			char* next_poz = NULL;
+			poz = strtok_s(cf1, " ", &next_poz);
+			int nr_cuv = 0;
+			int nr = 0;
+			while (poz != NULL && nr <= 3)
+			{
+				nr++;
+				table_name = poz;
+				poz = strtok_s(NULL, " ", &next_poz);
+			}
+			if (nr_cuv > 3)
+			{
+				cout << "Wrong table name";
+			}
+
+			else
+			{
+
+				bool ok = false;//presupunem ca nu exista o tabela cu acest nume
+				for (auto it = tl.begin(); it != tl.end() && ok == false; ++it)
+				{
+					if ((*it).table_name == table_name)
+					{
+						ok = true;
+						string table_data = table_name + "_data";
+						ofstream f(table_data, ios::binary | ios::app);
+						size_t found = comanda.find("(");
+						poz = NULL;
+						next_poz = NULL;
+
+						poz = strtok_s(cf2 + 6, "(,) ", &next_poz);
+						int length;
+						vector<string> linie;
+						while (poz != NULL)
+						{
+
+							char* poz1;
+							if (strchr(poz, '"') != NULL)
+							{
+								poz1 = poz + 1;
+								poz1[strlen(poz1) - 1] = '\0';
+								poz = poz1;
+							}
+							length = strlen(poz);
+							f.write((char*)&length, sizeof(length));
+							f.write(poz, length + 1);
+							linie.push_back(poz);
+							poz = strtok_s(NULL, "(,)", &next_poz);
+						}
+
+						(*it).inregistrari.push_back(linie);
+						f.close();
+					}
+				}
+				if (ok == false)
+					cout << "Table doesn't exist";
+			}
+		}
+		else
+			cout << "missing VALUES keyword";
+	}
+
+	void insert_csv(string comanda)
+	{
+		string table_name;
+		string csv_file;
+		char* c_file = new char[comanda.length() + 1];
+		strcpy_s(c_file, comanda.length() + 1, comanda.c_str());
 		char* poz = NULL;
 		char* next_poz = NULL;
-		const char* sep = "V";
-		poz = strtok_s(dp, sep, &next_poz);
-		char* poz1 = NULL;
-		next_poz = NULL;
-		sep = " ";
-		poz1 = strtok_s(poz, sep, &next_poz);
-		string table_name;
+		poz = strtok_s(c_file, " ", &next_poz);
 		int nr_cuv = 0;
-		while (poz1 != NULL)
+		int nr = 0;
+		while (poz != NULL && nr < 3)
 		{
-			/*cout << poz1 << endl;*/
-			nr_cuv++;
-			table_name = poz1;
-			poz1 = strtok_s(NULL, sep, &next_poz);
+			nr++;
+			if (nr == 2)
+			{
+				table_name = poz;
+			}
+			if (nr == 3)
+			{
+				csv_file = poz;
 
+			}
+
+			poz = strtok_s(NULL, " ", &next_poz);
 		}
-		if (nr_cuv > 3)
-			cout << "Wrong table name";
+		if (poz != NULL)
+		{
+			cout << "Wrong table name or wrong file name";
+		}
 		else
 		{
 
@@ -216,35 +370,46 @@ public:
 				if ((*it).table_name == table_name)
 				{
 					ok = true;
+
 					string table_data = table_name + "_data";
 					ofstream f(table_data, ios::binary | ios::app);
-					size_t found = comanda.find("(");
-					string atribute = comanda.substr(found);
-					char* s = new char[atribute.length() + 1];
-					strcpy_s(s, atribute.length() + 1, atribute.c_str());
-					sep = "(,)";
-					poz = NULL;
-					next_poz = NULL;
-					poz = strtok_s(s, sep, &next_poz);
-					int length;
-					while (poz != NULL)
+					fstream fcsv;
+					fcsv.open(csv_file, ios::in);
+					string  line;
+					char* poz;
+					char* next_poz;
+					while (getline(fcsv, line))
 					{
-						length = strlen(poz);
-						f.write((char*)&length, sizeof(length));
-						f.write(poz, length + 1);
-						linie.push_back(poz);
-						poz = strtok_s(NULL, sep, &next_poz);
-					}
+						vector<string> linie;
+						/*cout << line << endl;*/
+						poz = NULL;
+						next_poz = NULL;
+						char* ch_line = new char[line.length() + 1];
+						strcpy_s(ch_line, line.length() + 1, line.c_str());
+						poz = strtok_s(ch_line, ",", &next_poz);
+						while (poz != NULL)
+						{
+							char* c;
+							if (poz[0] == ' ')
+							{
+								c = poz + 1;
+								poz = c;
+							}
+							int length = strlen(poz);
+							f.write((char*)&length, sizeof(length));
+							f.write(poz, length + 1);
+							linie.push_back(poz);
+							poz = strtok_s(NULL, ",", &next_poz);
 
-					(*it).inregistrari.push_back(linie);
-					f.close();
+						}
+						delete[] ch_line;
+						(*it).inregistrari.push_back(linie);
+					}
 				}
+
 			}
-			if (ok == false)
-				cout << "Table doesn't exist";
 		}
 	}
-
 	void display_table(string comanda)
 	{
 
@@ -258,7 +423,7 @@ public:
 		int nr_cuv = 0;
 		while (poz != NULL)
 		{
-			/*cout << poz << endl;*/
+
 			table_name = poz;
 			nr_cuv++;
 			poz = strtok_s(NULL, sep, &next_poz);
@@ -301,8 +466,8 @@ public:
 						int nr = 0;
 						for (auto& j : i)
 						{
-							nr++;
-							if (column_type[nr - 1] == "integer")
+
+							if (column_type[nr] == "integer")
 							{
 								int newVal = stoi(j);
 								cout << newVal << "\t\t\t";
@@ -310,7 +475,7 @@ public:
 							}
 							else
 							{
-								if (column_type[nr - 1] == "float")
+								if (column_type[nr] == "float")
 								{
 									float newVal1 = stof(j);
 									cout << newVal1 << "\t\t\t";
@@ -318,10 +483,11 @@ public:
 								}
 								else
 								{
-									cout << j << "\t\t\t";
-									f << j << "\t\t\t";
+									cout << j << "\t\t\t\t";
+									f << j << "\t\t\t\t";
 								}
 							}
+							nr++;
 						}
 						cout << endl;
 						f << endl;

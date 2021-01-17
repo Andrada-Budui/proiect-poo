@@ -3,6 +3,4 @@ C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(48,27): warning C4129: '
 C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(51,20): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(61,20): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Andrada\Desktop\proiect-poo\proiect\Commands.h(74,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Andrada\Desktop\proiect-poo\proiect\REPORT.h(328,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Andrada\Desktop\proiect-poo\proiect\REPORT.h(390,21): warning C4018: '<': signed/unsigned mismatch
   proiect.vcxproj -> C:\Users\Andrada\Desktop\proiect-poo\proiect\Debug\proiect.exe

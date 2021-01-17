@@ -81,6 +81,7 @@ public:
 
 				for (auto& i : (*it).inregistrari)
 				{
+
 					if (i[poz_where - 1] == whereVal)
 						i[poz_set - 1] = setVal;
 				}

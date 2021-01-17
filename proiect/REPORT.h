@@ -306,7 +306,7 @@ public:
 							int nr = 0;
 							for (auto& j : (*it).column_vector)
 							{
-								nr++;
+
 								if (i == j.name)
 								{
 									pozitii_col.push_back(nr);
@@ -315,54 +315,38 @@ public:
 								}
 								if (iter->first == j.name)
 									poz_cond = nr;
+								nr++;
 							}
 						}
 						f << endl;
 						for (auto& i : (*it).inregistrari)
 						{
-							if (i[poz_cond - 1] == iter->second)
+							if (i[poz_cond] == iter->second)
 							{
-								int nr = 0, poz_col = 0;
-								for (auto& j : i)
+								for (auto k = pozitii_col.begin(); k != pozitii_col.end(); ++k)
 								{
-									if (poz_col < column_type.size())
-										poz_col++;
-									nr++;
-									bool ok = 0;
-									for (auto k = pozitii_col.begin(); k != pozitii_col.end(); ++k)
+									int poz_col = *k;
+									int nr = 0;
+									for (auto& j : i)
 									{
-										if (*k == nr) ok = 1;
-									}
-									if (ok == 1)
-									{
+										if (poz_col == nr)
 
-										if (column_type[poz_col - 1] == "integer")
 										{
-											int newVal = stoi(j);
-											cout << newVal << "\t\t\t";
-											f << newVal << "\t\t\t";
+											f << j << "\t\t\t\t";
+											cout << j << "\t\t\t\t";
 										}
-										else
-										{
-											if (column_type[poz_col - 1] == "float")
-											{
-												float newVal1 = stof(j);
-												cout << newVal1 << "\t\t\t";
-												f << newVal1 << "\t\t\t";
-											}
-											else
-											{
-												cout << j << "\t\t\t";
-												f << j << "\t\t\t";
-											}
-										}
+
+										nr++;
+
 									}
 								}
-								f << endl;
-								cout << endl;
+
 							}
 
+							f << endl;
+							cout << endl;
 						}
+
 					}
 					else
 					{
@@ -371,50 +355,33 @@ public:
 							int nr = 0;
 							for (auto& j : (*it).column_vector)
 							{
-								nr++;
+
 								if (i == j.name)
 								{
 									pozitii_col.push_back(nr);
-									f << j.name << "\t\t\t";
+									f << j.name << "\t\t\t\t";
 									column_type.push_back(j.type);
 								}
+								nr++;
 							}
 						}
 						f << endl;
 						for (auto& i : (*it).inregistrari)
 						{
-							int nr = 0, poz_col = 0;
-
-							for (auto& j : i)
+							for (auto k = pozitii_col.begin(); k != pozitii_col.end(); ++k)
 							{
-								if (poz_col < column_type.size())
-									poz_col++;
-								nr++;
-								bool ok = 0;
-								for (auto k = pozitii_col.begin(); k != pozitii_col.end() && ok == 0; ++k)
-									if (*k == nr) ok = 1;
-								if (ok == 1)
+								int poz_col = *k;
+								int nr = 0;
+								for (auto& j : i)
 								{
-									if (column_type[poz_col - 1] == "integer")
+									if (poz_col == nr)
+
 									{
-										int newVal = stoi(j);
-										cout << newVal << "\t\t\t";
-										f << newVal << "\t\t\t";
+										f << j << "\t\t\t\t";
+										cout << j << "\t\t\t\t";
 									}
-									else
-									{
-										if (column_type[poz_col - 1] == "float")
-										{
-											float newVal1 = stof(j);
-											cout << newVal1 << "\t\t\t";
-											f << newVal1 << "\t\t\t";
-										}
-										else
-										{
-											cout << j << "\t\t\t";
-											f << j << "\t\t\t";
-										}
-									}
+
+									nr++;
 
 								}
 							}

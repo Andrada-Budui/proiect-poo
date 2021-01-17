@@ -5,6 +5,13 @@
 #include "Commands.h"
 #include "Column.h"
 #include "Table.h"
+#include "Options.h"
+#include "Option1.h"
+#include "Option2.h"
+#include "Option3.h"
+#include "Option4.h"
+
+
 using namespace std;
 
 ostream& operator<<(ostream& out, Column c)
@@ -13,45 +20,72 @@ ostream& operator<<(ostream& out, Column c)
 	return out;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
 	Verify vf;
-	/*vf.file("comenzi.txt");*/
-	string comanda = "CREATE TABLE persoana ((varsta, integer, 2, 0),(nume, text, 30, no ),(adresa, text, 40, no)";
-	//string comanda5 = "CREATE TABLE angajati ((varsta, integer, 2, 0),(nume, text, 25, no ),(adresa, text, 40, no))";
-	//string comanda2 = "DROP TABLE persoana";
-	string comanda3 = "INSERT INTO persoana VALUES (21,\"Popescu Ion\",\"Bucuresti\")";
-	string comanda4 = "INSERT INTO persoana VALUES (29,\"Niculescu Florin\",\"Cluj\")";
-	string comanda9 = "INSERT INTO persoana VALUES (26,\"Mugurel Daniel\",\"Bucuresti\")";
-	string comanda6 = "DISPLAY TABLE persoana";
-	//string comanda7 = "DELETE FROM persoana";
-	//string comanda8 = "DELETE FROM persoana WHERE varsta=21";
-	//string comanda10 = "SELECT ALL FROM persoana";
-	//string comanda11 = "SELECT ALL FROM persoana WHERE nume=Mugurel";
-	//string comanda12 = "SELECT nume, adresa FROM persoana";
-	//string comanda13 = "SELECT varsta, adresa FROM persoana WHERE adresa=Cluj";
-	//string comanda14 = "UPDATE persoana SET nume=Minulescu WHERE adresa=Bucuresti";
-	string comanda15 = "IMPORT persoana insert.csv";
-	vf.check(comanda);
-	vf.check(comanda3);
-	vf.check(comanda4);
-	vf.check(comanda9);
-	vf.check(comanda15);
-	//vf.check(comanda5);
-	//vf.check(comanda2);
-	//vf.check(comanda7);
-	//vf.check(comanda8);
-	vf.check(comanda6);
-	//vf.check(comanda14);
-	//vf.check(comanda6);
-	//vf.check(comanda10);
-	//vf.check(comanda11);
-	/*vf.check(comanda12);*/
-	//vf.check(comanda13);
+	string command;
+	for (int i = 1; i < argc; i++)
+	{
+		string file_name = argv[i];
+		vf.file(file_name);
+	}
+	Option1 op1;
+	Option2 op2;
+	Option3 op3;
+	Option4 op4;
 
+	Options** op = new Options * [4];
+	op[0] = &op1;
+	op[1] = &op2;
+	op[2] = &op3;
+	op[3] = &op4;
 
-
-
+	int choice;
+	cout << "MENU OPTION" << endl;
+	cout << "1  -  GENERAL REPORT" << endl;
+	cout << "2  -  CUSTOMIZED REPORT" << endl;
+	cout << "3  -  ALTER TABLE" << endl;
+	cout << "4  -  USE EXISTING FILE COMMANDS";
+	cout << endl << endl;
+	string ok = "yes";
+	while (ok == "yes")
+	{
+		cout << "Press 1 or 2 or 3 or 4: ";
+		cin >> choice;
+		if (choice == 1)
+		{
+			op[0]->option();
+			cout << endl << "Please, type in your command : ";
+			cin >> ws;
+			getline(cin, command);
+			vf.check(command);
+		}
+		if (choice == 2)
+		{
+			op[1]->option();
+			cout << endl << "Please, type in your command : ";
+			cin >> ws;
+			getline(cin, command);
+			vf.check(command);
+		}
+		if (choice == 3)
+		{
+			op[2]->option();
+			cout << endl << "Please, type in your command : ";
+			cin >> ws;
+			getline(cin, command);
+			vf.check(command);
+		}
+		if (choice == 4)
+		{
+			string file_name;
+			op[3]->option();
+			cin >> file_name;
+			vf.file(file_name);
+		}
+		cout << "Continue? yes/no : ";
+		cin >> ok;
+	}
 	return 0;
 
 }

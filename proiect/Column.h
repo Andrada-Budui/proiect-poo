@@ -14,7 +14,6 @@ public:
 
 	Column() {}
 
-
 	Column(string name, string type, string dimension, string defaultValue)
 	{
 		this->name = name;

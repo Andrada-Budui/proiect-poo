@@ -1,0 +1,7 @@
+DISPLAY TABLE persoane
+SELECT ALL FROM persoane
+SELECT ALL FROM persoane WHERE nume=Mugurel
+SELECT nume, adresa FROM persoane
+SELECT varsta, adresa FROM persoane WHERE adresa=Cluj
+UPDATE persoane SET nume=Minulescu WHERE adresa=Bucuresti
+

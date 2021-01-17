@@ -32,5 +32,38 @@
     <ClInclude Include="Verify.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Options.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Option1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Option2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Option3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Option4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CREATE_TABLE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DROP_TABLE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="INSERT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UPDATE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DELETE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="REPORT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

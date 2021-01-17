@@ -1,0 +1,4 @@
+INSERT INTO persoane VALUES (21, Popescu Ion, Bucuresti)
+INSERT INTO persoane VALUES (29, Niculescu Florin, Cluj)
+INSERT INTO persoane VALUES (26, Mugurel Daniel ,Bucuresti)
+IMPORT persoane insert.csv

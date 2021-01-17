@@ -1,0 +1,2 @@
+CREATE TABLE persoane ((varsta, integer, 2, 0),(nume, text, 30, no ),(adresa, text, 40, no))
+CREATE TABLE angajati ((varsta, integer, 2, 0),(nume, text, 25, no ),(adresa, text, 40, no))
